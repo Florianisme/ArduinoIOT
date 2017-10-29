@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "813065533765",
+    "firebase_url": "https://arduinohome-acc8b.firebaseio.com",
+    "project_id": "arduinohome-acc8b",
+    "storage_bucket": "arduinohome-acc8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813065533765:android:b997aaa507a510ab",
+        "android_client_info": {
+          "package_name": "com.florianisme.arduinoiot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "813065533765-ddl6v59fkspoiu20qdt60qfk4t73fp2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf0F0PQYN5JCy5vXCa6MpArh-gd0-__W4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
