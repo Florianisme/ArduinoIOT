@@ -5,7 +5,9 @@
     <application
         android:icon="@mipmap/ic_launcher" >
 
-        <receiver android:name="MyStartServiceReceiver" >
+        <activity android:name=".MainActivity"/>
+
+        <receiver android:name=".MyStartServiceReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

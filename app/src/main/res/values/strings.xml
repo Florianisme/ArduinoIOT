@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_plants">Pflanzen</string>
+    <string name="label_plant_water_level">Wasserstand</string>
+    <string name="label_plants_brightness">Helligkeit</string>
+    <string name="label_plants_brightness_description">Pflanzen sollten an einem ausreichen beleuchtetem Ort platziert werden</string>
+    <string name="title_room">Raumbedingungen</string>
+    <string name="label_temperature">Temperatur</string>
+    <string name="label_humidity">Luftfeuchtigkeit</string>
+</resources>
