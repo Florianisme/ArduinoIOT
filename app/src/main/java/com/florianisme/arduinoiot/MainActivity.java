@@ -73,22 +73,28 @@ public class MainActivity extends AppCompatActivity {
     /*
         Reads data from the specified childName from the database and sets it as the textField's value
      */
-    private void setDataFromDatabase(String childName, final TextView textField) {
+    private void setDataFromDatabase(final String childName, final TextView textField) {
         // this adds a listener to the specified child in the database and runs an asynchronous task in the background,
         // downloading the data and putting it into a DataSnapshot object
         firebaseDatabase.getReference().child(childName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Task succeeded
-                Log.d(TAG, "Task succeeded");
-                textField.setText((String) dataSnapshot.getValue());
+                Log.d(TAG, "Task succeeded for field name " + childName);
+                if (dataSnapshot.exists())
+                    textField.setText((String) dataSnapshot.getValue());
+                else
+                    textField.setText(R.string.error_no_value);
+
+                swipeRefreshLayout.setRefreshing(false); // stops the spinning animation
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Task failed
-                Log.d(TAG, "Task failed with error message: " + databaseError.getMessage());
-                textField.setText("Error");
+                Log.d(TAG, "Task failed for field name " + childName + " with error message: " + databaseError.getMessage());
+                textField.setText(R.string.error_database);
+                swipeRefreshLayout.setRefreshing(false); // stops the spinning animation
             }
         });
     }

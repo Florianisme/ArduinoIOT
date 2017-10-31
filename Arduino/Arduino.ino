@@ -31,8 +31,8 @@ void setup() {
 }
 
 void loop() {
-  String brightness = readBrightnessLevel();
-  Firebase.setString("brightness", brightness); // brightness value is stored in the database with the key "brightness"
+  String brightness = readPlantBrightnessLevel();
+  Firebase.setString("plant_brightness", brightness); // brightness value is stored in the database with the key "brightness"
   
   //delay(1000 * 60 * 30); // refresh every 30 minutes
 }
@@ -40,9 +40,9 @@ void loop() {
 /*
  * Reads the brightness sensor and returns a conclusion of the sensor values in textual form
  */
-String readBrightnessLevel() {
+String readPlantBrightnessLevel() {
   int photocellReading = analogRead(SENSOR_LIGHT);
-  debugReadings("Brightness", photocellReading);
+  debugReadings("Plant Brightness", photocellReading);
   
   if (photocellReading < 100) {
     return "Dark";

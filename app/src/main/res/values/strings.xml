@@ -10,4 +10,6 @@
     <string name="title_room">Raumbedingungen</string>
     <string name="label_temperature">Temperatur</string>
     <string name="label_humidity">Luftfeuchtigkeit</string>
+    <string name="error_no_value">No value</string>
+    <string name="error_database">Error</string>
 </resources>
