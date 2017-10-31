@@ -4,17 +4,8 @@
 
     <application
         android:icon="@mipmap/ic_launcher" >
-
         <activity android:name=".MainActivity"/>
 
-        <receiver android:name=".MyStartServiceReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name=".MyJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
 </manifest>
