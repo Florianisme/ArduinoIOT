@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="app_title">Arduino IOT Demo</string>
+
     <string name="title_plants">Pflanzen</string>
     <string name="label_plant_water_level">Wasserstand</string>
     <string name="label_plants_brightness">Helligkeit</string>

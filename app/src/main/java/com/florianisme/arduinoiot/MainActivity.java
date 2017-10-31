@@ -2,6 +2,7 @@ package com.florianisme.arduinoiot;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.room_humidity)
     TextView roomHumidity;
 
+    @BindView(R.id.main_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     FirebaseDatabase firebaseDatabase;
 
     @Override
@@ -38,9 +42,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); // set's the current layout
         ButterKnife.bind(this); // Binds views from our layout to usable Objects
+        setTitle(R.string.app_title);
 
         firebaseDatabase = FirebaseDatabase.getInstance(); // initialization of our Database reference, the url can be found in the google-service.json file
 
+        reloadData();
+
+        // this adds a swipe-to-refresh listener to our layout so we can swipe down to refresh our data from the database manually
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reloadData();
+            }
+        });
+    }
+
+    private void reloadData() {
         // this adds a listener to the specified child in the database and runs an asynchronous task in the background,
         // downloading the data and putting it into a DataSnapshot object
         firebaseDatabase.getReference().child("brightness").addListenerForSingleValueEvent(new ValueEventListener() {
