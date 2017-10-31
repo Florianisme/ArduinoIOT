@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ActivityBase" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ActivityBase" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimary">@color/primary</item>
     </style>
 
 </resources>

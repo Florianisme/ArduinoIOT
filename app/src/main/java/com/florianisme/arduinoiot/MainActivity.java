@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.plant_water_level)
     TextView plantWaterLevel;
     @BindView(R.id.room_temperature)
-    TextView roomTemparature;
+    TextView roomTemperature;
     @BindView(R.id.room_humidity)
     TextView roomHumidity;
 
@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase;
 
+    /*
+        called when the Activity is started, instantiates objects, binds views and starts the database logic
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,21 +60,35 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
+        used to reload data from the database, calls the downloading method for each TextView in our layout
+     */
     private void reloadData() {
+        setDataFromDatabase("plant_brightness", plantBrightness);
+        setDataFromDatabase("plant_water_level", plantWaterLevel);
+        setDataFromDatabase("room_temperature", roomTemperature);
+        setDataFromDatabase("room_humidity", roomHumidity);
+    }
+
+    /*
+        Reads data from the specified childName from the database and sets it as the textField's value
+     */
+    private void setDataFromDatabase(String childName, final TextView textField) {
         // this adds a listener to the specified child in the database and runs an asynchronous task in the background,
         // downloading the data and putting it into a DataSnapshot object
-        firebaseDatabase.getReference().child("brightness").addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseDatabase.getReference().child(childName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Task succeeded
                 Log.d(TAG, "Task succeeded");
-                plantBrightness.setText((String) dataSnapshot.getValue());
+                textField.setText((String) dataSnapshot.getValue());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Task failed
                 Log.d(TAG, "Task failed with error message: " + databaseError.getMessage());
+                textField.setText("Error");
             }
         });
     }
