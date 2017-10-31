@@ -44,11 +44,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); // set's the current layout
-        ButterKnife.bind(this); // Binds views from our layout to usable Objects
+        ButterKnife.bind(this); // Binds views from our layout to usable Java objects
         setTitle(R.string.app_title);
 
         firebaseDatabase = FirebaseDatabase.getInstance(); // initialization of our Database reference, the url can be found in the google-service.json file
 
+        // initial call to download fresh data
         reloadData();
 
         // this adds a swipe-to-refresh listener to our layout so we can swipe down to refresh our data from the database manually
