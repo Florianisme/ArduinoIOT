@@ -23,7 +23,7 @@
 // "Util.h" // contains all the helper methods for debugging
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600); // A serial monitor can always be attached to track raw sensor readings
 
   instantiateMux(); // sets up the Mux's IO connections so we can read from it
   instantiateWifiConnection(); // connects to WiFi network specified in the config.h

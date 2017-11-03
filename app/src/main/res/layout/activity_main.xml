@@ -46,10 +46,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
                     android:textColor="@android:color/primary_text_light"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/plant_water_level_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Messwert ist zu niedrig!"
+                    android:textColor="@color/value_warning"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <View
@@ -59,7 +72,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="56dp">
 
                 <TextView
                     android:id="@+id/settings_text_transparency"
@@ -73,18 +86,6 @@
                     android:textColor="@android:color/primary_text_light"
                     android:textSize="16sp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@id/settings_text_transparency"
-                    android:layout_marginBottom="14dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="1dp"
-                    android:gravity="center_vertical"
-                    android:maxWidth="200dp"
-                    android:text="@string/label_plants_brightness_description"
-                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/plant_brightness"
@@ -95,10 +96,20 @@
                     android:layout_centerVertical="true"
                     android:textColor="@android:color/primary_text_light"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/plant_brightness_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Messwert ist zu niedrig!"
+                    android:textColor="@color/value_warning"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
-
-
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -164,6 +175,19 @@
                     android:layout_centerVertical="true"
                     android:textColor="@android:color/primary_text_light"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/room_humidity_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Reduzieren um Schimmelbildung zu vermeiden"
+                    android:textColor="@color/value_warning"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

@@ -6,4 +6,5 @@
     <color name="primary">#455A64</color>
     <color name="primary_dark">#263238</color>
 
+    <color name="value_warning">#EF5350</color>
 </resources>

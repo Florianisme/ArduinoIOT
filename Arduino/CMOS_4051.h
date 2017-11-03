@@ -2,8 +2,8 @@
  * This class contains all the methods used for reading the sensor's values
  */
 
-#define MUX_A D4
-#define MUX_B D3
+#define MUX_A D0
+#define MUX_B D1
 #define MUX_C D2
 
 #define ANALOG_INPUT A0
@@ -61,7 +61,7 @@ int readAnalogValueFromMuxPin(int pin) {
       break;
   }
   
-  return analogRead(ANALOG_INPUT); //Value of the sensor connected Option 0 pin of Mux
+  return analogRead(ANALOG_INPUT); // Value of the sensor connected to the specified pin
 }
 
 

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
     TextView roomTemperature;
     @BindView(R.id.room_humidity)
     TextView roomHumidity;
+
+    @BindView(R.id.plant_water_level_warning)
+    TextView plantWaterLevelWarning;
+    @BindView(R.id.plant_brightness_warning)
+    TextView plantBrightnessWarning;
+    @BindView(R.id.room_humidity_warning)
+    TextView roomHumidityWarning;
 
     @BindView(R.id.main_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -69,12 +77,16 @@ public class MainActivity extends AppCompatActivity {
         setDataFromDatabase("plant_water_level", plantWaterLevel);
         setDataFromDatabase("room_temperature", roomTemperature);
         setDataFromDatabase("room_humidity", roomHumidity);
+
+        setErrorLayoutFromDatabase("plant_brightness_warning", plantBrightnessWarning);
+        setErrorLayoutFromDatabase("plant_water_level_warning", plantWaterLevelWarning);
+        setErrorLayoutFromDatabase("room_humidity_warning", roomHumidityWarning);
     }
 
     /*
         Reads data from the specified childName from the database and sets it as the textField's value
      */
-    private void setDataFromDatabase(final String childName, final TextView textField) {
+    private void setDataFromDatabase(final String childName, final TextView textView) {
         // this adds a listener to the specified child in the database and runs an asynchronous task in the background,
         // downloading the data and putting it into a DataSnapshot object
         firebaseDatabase.getReference().child(childName).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -83,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
                 // Task succeeded
                 Log.d(TAG, "Task succeeded for field name " + childName);
                 if (dataSnapshot.exists())
-                    textField.setText((String) dataSnapshot.getValue());
+                    textView.setText((String) dataSnapshot.getValue());
                 else
-                    textField.setText(R.string.error_no_value);
+                    textView.setText(R.string.error_no_value);
 
                 swipeRefreshLayout.setRefreshing(false); // stops the spinning animation
             }
@@ -94,7 +106,31 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 // Task failed
                 Log.d(TAG, "Task failed for field name " + childName + " with error message: " + databaseError.getMessage());
-                textField.setText(R.string.error_database);
+                textView.setText(R.string.error_database);
+                swipeRefreshLayout.setRefreshing(false); // stops the spinning animation
+            }
+        });
+    }
+
+    private void setErrorLayoutFromDatabase(final String childName, final TextView textView) {
+        firebaseDatabase.getReference().child(childName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Task succeeded
+                Log.d(TAG, "Task succeeded for field name " + childName);
+                if (dataSnapshot.exists())
+                    textView.setVisibility((boolean) dataSnapshot.getValue() ? View.VISIBLE : View.GONE);
+                else
+                    textView.setVisibility(View.GONE);
+
+                swipeRefreshLayout.setRefreshing(false); // stops the spinning animation
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Task failed
+                Log.d(TAG, "Task failed for field name " + childName + " with error message: " + databaseError.getMessage());
+                textView.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false); // stops the spinning animation
             }
         });
