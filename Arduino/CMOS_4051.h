@@ -1,4 +1,7 @@
-// IO ports
+/*
+ * This class contains all the methods used for reading the sensor's values
+ */
+
 #define MUX_A D4
 #define MUX_B D3
 #define MUX_C D2
