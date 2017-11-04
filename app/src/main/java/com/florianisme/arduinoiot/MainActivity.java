@@ -77,10 +77,6 @@ public class MainActivity extends AppCompatActivity {
         setDataFromDatabase("plant_water_level", plantWaterLevel);
         setDataFromDatabase("room_temperature", roomTemperature);
         setDataFromDatabase("room_humidity", roomHumidity);
-
-        setErrorLayoutFromDatabase("plant_brightness_warning", plantBrightnessWarning);
-        setErrorLayoutFromDatabase("plant_water_level_warning", plantWaterLevelWarning);
-        setErrorLayoutFromDatabase("room_humidity_warning", roomHumidityWarning);
     }
 
     /*
@@ -95,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 // Task succeeded
                 Log.d(TAG, "Task succeeded for field name " + childName);
                 if (dataSnapshot.exists())
-                    textView.setText((String) dataSnapshot.getValue());
+                    textView.setText(interpreteMeasurementData(childName, (Double) dataSnapshot.getValue()));
                 else
                     textView.setText(R.string.error_no_value);
 
@@ -112,27 +108,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setErrorLayoutFromDatabase(final String childName, final TextView textView) {
-        firebaseDatabase.getReference().child(childName).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Task succeeded
-                Log.d(TAG, "Task succeeded for field name " + childName);
-                if (dataSnapshot.exists())
-                    textView.setVisibility((boolean) dataSnapshot.getValue() ? View.VISIBLE : View.GONE);
-                else
-                    textView.setVisibility(View.GONE);
+    String interpreteMeasurementData(String childName, double value) {
+        switch (childName) {
+            case "plant_brightness":
+                checkWarningLevelBelow(plantBrightnessWarning, value, 15);
+                return (Math.round(value) + "%");
+            case "plant_water_level":
+                checkWarningLevelBelow(plantWaterLevelWarning, value, 25);
+                return (Math.round(value) + "%");
+            case "room_temperature":
+                return (value + " °C");
+            case "room_humidity":
+                checkWarningLevelAbove(roomHumidityWarning, value, 80);
+                return (Math.round(value) + "%");
+        }
+        return "Error";
+    }
 
-                swipeRefreshLayout.setRefreshing(false); // stops the spinning animation
-            }
+    void checkWarningLevelBelow(TextView warningTextView, double value, float warningLevel) {
+        warningTextView.setVisibility(value <= warningLevel ? View.VISIBLE : View.GONE);
+    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Task failed
-                Log.d(TAG, "Task failed for field name " + childName + " with error message: " + databaseError.getMessage());
-                textView.setVisibility(View.GONE);
-                swipeRefreshLayout.setRefreshing(false); // stops the spinning animation
-            }
-        });
+    void checkWarningLevelAbove(TextView warningTextView, double value, float warningLevel) {
+        warningTextView.setVisibility(value >= warningLevel ? View.VISIBLE : View.GONE);
     }
 }
