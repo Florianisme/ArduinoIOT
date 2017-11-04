@@ -5,7 +5,7 @@
 /*
  * Recurring method, prints out the name of the sensor and it's value which was measured
  */
-void debugReadings(String sensorName, int sensorValue) {
+void debugReadings(String sensorName, float sensorValue) {
   Serial.print("Reading" + sensorName + ": ");
   Serial.println(sensorValue);
   Serial.println("------------------------");

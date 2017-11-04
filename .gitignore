@@ -5,5 +5,5 @@
 /build
 /captures
 .externalNativeBuild
-/Arduino/Secrets.h
 /.idea/
+/Arduino/Secrets.h
