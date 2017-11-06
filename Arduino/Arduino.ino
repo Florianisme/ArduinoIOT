@@ -6,9 +6,10 @@
  * The data from the database is then read by an Android application and shown to the user.
  * 
  * The circuit:
- * * Multiplexer's (CMOS4051) select pins connected to pins D0-D2
+ * * Multiplexer's (CMOS4051) select pins connected to pins D3-D5
  * * Multiplexer's analog output connected to pin A0
- * * Temperature/Humidity sensor (DHT11) connected to pin D3;
+ * * Temperature/Humidity sensor (DHT11) connected to pin D1;
+ * * Jumper wire from RST to D2 (for deep sleep)
  * 
  * Created 29 October 2017
  * By Florian Moehle
