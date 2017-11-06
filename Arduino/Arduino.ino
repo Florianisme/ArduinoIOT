@@ -9,7 +9,7 @@
  * * Multiplexer's (CMOS4051) select pins connected to pins D3-D5
  * * Multiplexer's analog output connected to pin A0
  * * Temperature/Humidity sensor (DHT11) connected to pin D1;
- * * Jumper wire from RST to D2 (for deep sleep)
+ * * Jumper wire from RST to D2 (for deep sleep, HAS to be disconnected during boot/upload))
  * 
  * Created 29 October 2017
  * By Florian Moehle
@@ -20,14 +20,25 @@
 #include <FirebaseArduino.h> // Firebase database library
 #include <dht11.h> // Temperature Sensor library
 
+// Board GPIO PINS
+#define MUX_A D2
+#define MUX_B D3
+#define MUX_C D4
+#define ANALOG_INPUT A0
+#define DHT11_INPUT D1
+// Multiplexer analog inputs
+#define WATER_INPUT 1
+#define BRIGHTNESS_INPUT 0
+
 #include "Secrets.h" // sensitive keys/passwords have been extracted to another file so they are not directly visible
 // "Multiplexer.ino" contains code for accessing the multiplexer's input pins and passing through their values
 // "SensorReadings.ino" contains all the methods for reading each sensor's value and interpreting them for upload
-// "Util.ino" contains all the helper methods (debugging, etc.)
+// "Util.ino" contains all the helper methods and our pin values (debugging, etc.)
 
 void setup() {
   Serial.begin(9600); // A serial monitor can always be attached to track raw sensor readings
-
+  while(!Serial) { } // Wait for the serial to initialize
+  
   instantiateMux(); // sets up the Mux's I/O connections so we can read from it
   instantiateWifiConnection(); // connects to WiFi network specified in the config.h
   
@@ -35,7 +46,8 @@ void setup() {
 
   updateData();
 
-  ESP.deepSleep(30e6); // deep-sleep for 30 seconds, then restart the setup method
+  Serial.println("Entering deep sleep");
+  ESP.deepSleep(1.8e9); // deep-sleep for 30 minutes, then restart the setup method
 }
 
 void updateData() {

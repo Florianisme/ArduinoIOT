@@ -5,12 +5,6 @@
  * By Florian Moehle
  */
 
-#define MUX_A D0
-#define MUX_B D1
-#define MUX_C D2
-
-#define ANALOG_INPUT A0
-
 /*
  * called in setup method
  */
