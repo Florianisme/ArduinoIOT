@@ -24,11 +24,12 @@
 #define MUX_A D2
 #define MUX_B D3
 #define MUX_C D4
-#define ANALOG_INPUT A0
-#define DHT11_INPUT D1
+#define WATER_OUTPUT D5 // used to read the plant's water level and turned off to prevent corosion
+#define ANALOG_INPUT A0 // our only analog input which is connected to the multiplexer's output
+#define DHT11_INPUT D1 // serial connection to our temperature sensor
 // Multiplexer analog inputs
-#define WATER_INPUT 1
-#define BRIGHTNESS_INPUT 0
+#define WATER_INPUT 1 // multiplexer input index for the water level
+#define BRIGHTNESS_INPUT 0 // multiplexer input index for the brightness level
 
 #include "Secrets.h" // sensitive keys/passwords have been extracted to another file so they are not directly visible
 // "Multiplexer.ino" contains code for accessing the multiplexer's input pins and passing through their values
@@ -50,8 +51,12 @@ void setup() {
   ESP.deepSleep(1.8e9); // deep-sleep for 30 minutes, then restart the setup method
 }
 
+/*
+ * read sensor values with the helper methods from SensorReadings.ino and upload the to the database
+ */
 void updateData() {
-  const float plantBrightness = readPlantBrightnessLevel(); // read sensor values with the helper methods from SensorReadings.ino and store them in constants
+  readTemperatureSensor(); // Has to be called seperately, the library reads the temperature/humidity once and stores it so we can later use it, without calling the read function again
+  const float plantBrightness = readPlantBrightnessLevel(); 
   const float plantWaterLevel = readPlantWaterLevel();
   const float roomTemperature = readRoomTemperature();
   const float roomHumidity = readRoomHumidity();

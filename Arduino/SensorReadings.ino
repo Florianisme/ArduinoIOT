@@ -7,9 +7,15 @@
 
 dht11 DHT11;
 
- /*
- * Reads the brightness sensor and returns a conclusion of the sensor values in textual form
+/*
+ * reads the temperature/humidity and stores it
+ * if we read the values from the sensor, each time we actually want to retrieve them, measuring errors would occur 
+ * (eg. humidity of 160% because the sensor has no time to settle)
  */
+void readTemperatureSensor() {
+  DHT11.read(DHT11_INPUT);
+}
+
 float readPlantBrightnessLevel() {
   int photocellReading = readAnalogValueFromMuxPin(BRIGHTNESS_INPUT);
   float percentage = calculatePercentage(photocellReading);
@@ -18,19 +24,20 @@ float readPlantBrightnessLevel() {
 }
 
 float readRoomTemperature() {
-  int roomTemperature = DHT11.read(DHT11_INPUT);
   debugReadings("Room Temperature (°C)", (float) DHT11.temperature);
   return DHT11.temperature;
 }
 
 float readRoomHumidity() {
-  int roomHumidity = DHT11.read(DHT11_INPUT);
   debugReadings("Room Humidity (%)", (float) DHT11.humidity);
   return DHT11.humidity;
 }
 
 float readPlantWaterLevel() {
+  pinMode(WATER_OUTPUT, OUTPUT); // our program only consists of a setup method so we can call it here without issues
+  digitalWrite(WATER_OUTPUT, HIGH); // send current through the soil
   int analogReading = readAnalogValueFromMuxPin(WATER_INPUT);
+  digitalWrite(WATER_OUTPUT, LOW); // prevent corosion
   float percentage = calculatePercentage(analogReading);
   debugReadings("Water Level (%)", (float) percentage);
   return percentage;

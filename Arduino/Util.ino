@@ -14,8 +14,11 @@ void debugReadings(String sensorName, float sensorValue) {
   Serial.println("------------------------");
 }
 
+/*
+ * returns the percentage of the value provided in comparison to the maximum analog input value 1023
+ */
 float calculatePercentage(float value) {
-  return (value / 1024.0) * 100;
+  return (value / 1023.0) * 100;
 }
 
 /*
