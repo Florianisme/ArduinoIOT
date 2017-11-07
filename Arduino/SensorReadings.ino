@@ -12,7 +12,7 @@ dht11 DHT11;
  */
 float readPlantBrightnessLevel() {
   int photocellReading = readAnalogValueFromMuxPin(BRIGHTNESS_INPUT);
-  float percentage = (photocellReading / 1024.0) * 100;
+  float percentage = calculatePercentage(photocellReading);
   debugReadings("Plant Brightness", percentage);
   return percentage;
 }
@@ -31,7 +31,7 @@ float readRoomHumidity() {
 
 float readPlantWaterLevel() {
   int analogReading = readAnalogValueFromMuxPin(WATER_INPUT);
-  float percentage = (analogReading / 1024.0) * 100;
+  float percentage = calculatePercentage(analogReading);
   debugReadings("Water Level (%)", (float) percentage);
   return percentage;
 }

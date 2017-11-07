@@ -14,6 +14,10 @@ void debugReadings(String sensorName, float sensorValue) {
   Serial.println("------------------------");
 }
 
+float calculatePercentage(float value) {
+  return (value / 1024.0) * 100;
+}
+
 /*
  * run once on startup to connect to the WIFI_SSID specified in the config.h file
  */
