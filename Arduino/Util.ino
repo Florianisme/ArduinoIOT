@@ -21,19 +21,30 @@ float calculatePercentage(float value) {
   return (value / 1023.0) * 100;
 }
 
-/*
+/*    
  * run once on startup to connect to the WIFI_SSID specified in the config.h file
  */
 void instantiateWifiConnection() {
+  byte retryCount = 0;
   // connect to wifi.
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("connecting");
+  Serial.print("connecting to SSID " + String(WIFI_SSID));
   while (WiFi.status() != WL_CONNECTED) {
+    if (retryCount >= 10) {
+      showConnectionErrorMessage();
+      break;
+    }
     Serial.print(".");
     delay(500);
+    retryCount++; 
   }
   Serial.println();
   Serial.print("connected: ");
   Serial.println(WiFi.localIP());
   Serial.println();
 }
+
+void showConnectionErrorMessage() {
+  Serial.println("An Error occured while connection to SSID " + String(WIFI_SSID));
+}
+

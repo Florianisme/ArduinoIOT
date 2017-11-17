@@ -6,10 +6,10 @@
  * The data from the database is then read by an Android application and shown to the user.
  * 
  * The circuit:
- * * Multiplexer's (CMOS4051) select pins connected to pins D3-D5
+ * * Multiplexer's (CMOS4051) select pins connected to pins D2-D4
  * * Multiplexer's analog output connected to pin A0
  * * Temperature/Humidity sensor (DHT11) connected to pin D1;
- * * Jumper wire from RST to D2 (for deep sleep, HAS to be disconnected during boot/upload))
+ * * Jumper wire from RST to D0 (for deep sleep, HAS to be disconnected during boot/upload))
  * 
  * Created 29 October 2017
  * By Florian Moehle
@@ -37,15 +37,16 @@
 // "Util.ino" contains all the helper methods and our pin values (debugging, etc.)
 
 void setup() {
-  Serial.begin(9600); // A serial monitor can always be attached to track raw sensor readings
-  while(!Serial) { } // Wait for the serial to initialize
+  Serial.begin(115200); // A serial monitor can always be attached to track raw sensor readings
+  while(!Serial); // Wait for the serial to initialize
   
   instantiateMux(); // sets up the Mux's I/O connections so we can read from it
   instantiateWifiConnection(); // connects to WiFi network specified in the config.h
-  
-  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);// connects to firebase database
 
-  updateData();
+  if (WiFi.status() == WL_CONNECTED) {
+    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);// connects to firebase database
+    updateData(); // update data and upload
+  }
 
   Serial.println("Entering deep sleep");
   ESP.deepSleep(1.8e9); // deep-sleep for 30 minutes, then restart the setup method
