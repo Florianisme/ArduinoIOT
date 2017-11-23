@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 // Task succeeded
                 Log.d(TAG, "Task succeeded for field name " + childName);
                 if (dataSnapshot.exists())
-                    textView.setText(interpreteMeasurementData(childName, (Double) dataSnapshot.getValue()));
+                    textView.setText(interpretMeasurementData(childName, (Double) dataSnapshot.getValue()));
                 else
                     textView.setText(R.string.error_no_value);
 
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    String interpreteMeasurementData(String childName, double value) {
+    String interpretMeasurementData(String childName, double value) {
         switch (childName) {
             case "plant_brightness":
                 checkWarningLevelBelow(plantBrightnessWarning, value, 15);
