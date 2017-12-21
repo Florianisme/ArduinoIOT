@@ -7,11 +7,10 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 const ACTION_WATER_LEVEL = "water_level";
+const ACTION_NEEDS_WATERING = "plant_needs_watering";
 
 exports.getWaterLevel = functions.https.onRequest((request, response) => {
 	const app = new App({request, response});
-	console.log('Request headers: ' + JSON.stringify(request.headers));
-	console.log('Request body: ' + JSON.stringify(request.body));
 	
 	function getLevel (app) {
 		admin.database().ref('plant_water_level').once('value', (snapshot) => {
@@ -20,8 +19,20 @@ exports.getWaterLevel = functions.https.onRequest((request, response) => {
 		});
 	}
 	
+	function needsWatering(app) {
+		admin.database().ref('plant_water_level').once('value', (snapshot) => {
+			let level = snapshot.val();
+			if (level < 30) {
+				app.tell('Die Pflanze sollte gegossen werden, der Wasserstand beträgt noch ' + level + '%');
+			}
+			else {
+				app.tell('Die Pflanze muss noch nicht gegossen werden, der Wasserstand beträgt noch ' + level + '%');
+			}
+		});
+	}
+	
 	let actionMap = new Map();
 	actionMap.set(ACTION_WATER_LEVEL, getLevel);
-	
+	actionMap.set(ACTION_NEEDS_WATERING, needsWatering);
 	app.handleRequest(actionMap);
  });

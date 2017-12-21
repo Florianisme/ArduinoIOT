@@ -44,7 +44,7 @@ void setup() {
   instantiateWifiConnection(); // connects to WiFi network specified in the config.h
 
   if (WiFi.status() == WL_CONNECTED) {
-    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);// connects to firebase database
+    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH); // connects to firebase database
     updateData(); // update data and upload
   }
 
