@@ -56,7 +56,7 @@ void setup() {
  * read sensor values with the helper methods from SensorReadings.ino and upload the to the database
  */
 void updateData() {
-  readTemperatureSensor(); // Has to be called seperately, the library reads the temperature/humidity once and stores it so we can later use it, without calling the read function again
+  readTemperatureSensor(); // Has to be called seperately, the library reads the temperature/humidity once and stores it internally so we can later use it, without calling the read function again
   const float plantBrightness = readPlantBrightnessLevel(); 
   const float plantWaterLevel = readPlantWaterLevel();
   const float roomTemperature = readRoomTemperature();
