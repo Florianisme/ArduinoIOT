@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.app_title);
 
         firebaseDatabase = FirebaseDatabase.getInstance(); // initialization of our Database reference, the url can be found in the google-service.json file
+        firebaseDatabase.setPersistenceEnabled(true);
 
         // initial call to download fresh data
         reloadData();
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 // Task succeeded
                 Log.d(TAG, "Task succeeded for field name " + childName);
                 if (dataSnapshot.exists())
-                    textView.setText(interpretMeasurementData(childName, (Double) dataSnapshot.getValue()));
+                    textView.setText(interpretMeasurementData(childName, Double.valueOf(String.valueOf(dataSnapshot.getValue()))));
                 else
                     textView.setText(R.string.error_no_value);
 
