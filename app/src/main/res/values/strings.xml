@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_title">Arduino IOT Demo</string>
+    <string name="app_title">Arduino IoT</string>
 
     <string name="title_plants">Pflanzen</string>
     <string name="label_plant_water_level">Wasserstand</string>
-    <string name="label_plants_brightness">Helligkeit</string>
-    <string name="label_plants_brightness_description">Pflanzen sollten an einem ausreichen beleuchtetem Ort platziert werden</string>
-    <string name="title_room">Raumbedingungen</string>
+    <string name="title_room">Umgebungsbedingungen</string>
     <string name="label_temperature">Temperatur</string>
     <string name="label_humidity">Luftfeuchtigkeit</string>
-    <string name="error_no_value">No value</string>
-    <string name="error_database">Error</string>
+    <string name="error_no_value">Kein Wert</string>
+    <string name="error_database">Fehler</string>
 </resources>

@@ -2,9 +2,9 @@
 <resources>
 
 
-    <color name="textColorAccent">#009587</color>
-    <color name="primary">#455A64</color>
-    <color name="primary_dark">#263238</color>
+    <color name="textColorAccent">#3f51b5</color>
+    <color name="primary">#ffc107</color>
+    <color name="primary_dark">#c79100</color>
 
-    <color name="value_warning">#EF5350</color>
+    <color name="value_warning">#d32f2f</color>
 </resources>

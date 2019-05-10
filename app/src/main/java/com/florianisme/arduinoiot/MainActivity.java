@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
 
-    @BindView(R.id.plant_brightness)
-    TextView plantBrightness;
     @BindView(R.id.plant_water_level)
     TextView plantWaterLevel;
     @BindView(R.id.room_temperature)
@@ -35,15 +33,11 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.plant_water_level_warning)
     TextView plantWaterLevelWarning;
-    @BindView(R.id.plant_brightness_warning)
-    TextView plantBrightnessWarning;
-    @BindView(R.id.room_humidity_warning)
-    TextView roomHumidityWarning;
 
     @BindView(R.id.main_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    FirebaseDatabase firebaseDatabase;
+    private FirebaseDatabase firebaseDatabase;
 
     /*
         called when the Activity is started, instantiates objects, binds views and starts the database logic
@@ -74,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         used to reload data from the database, calls the downloading method for each TextView in our layout
      */
     private void reloadData() {
-        setDataFromDatabase("plant_brightness", plantBrightness);
         setDataFromDatabase("plant_water_level", plantWaterLevel);
         setDataFromDatabase("room_temperature", roomTemperature);
         setDataFromDatabase("room_humidity", roomHumidity);
@@ -111,16 +104,12 @@ public class MainActivity extends AppCompatActivity {
 
     String interpretMeasurementData(String childName, double value) {
         switch (childName) {
-            case "plant_brightness":
-                checkWarningLevelBelow(plantBrightnessWarning, value, 15);
-                return (Math.round(value) + "%");
             case "plant_water_level":
                 checkWarningLevelBelow(plantWaterLevelWarning, value, 25);
                 return (Math.round(value) + "%");
             case "room_temperature":
                 return (value + " °C");
             case "room_humidity":
-                checkWarningLevelAbove(roomHumidityWarning, value, 80);
                 return (Math.round(value) + "%");
         }
         return "Error";
@@ -128,9 +117,5 @@ public class MainActivity extends AppCompatActivity {
 
     void checkWarningLevelBelow(TextView warningTextView, double value, float warningLevel) {
         warningTextView.setVisibility(value <= warningLevel ? View.VISIBLE : View.GONE);
-    }
-
-    void checkWarningLevelAbove(TextView warningTextView, double value, float warningLevel) {
-        warningTextView.setVisibility(value >= warningLevel ? View.VISIBLE : View.GONE);
     }
 }
