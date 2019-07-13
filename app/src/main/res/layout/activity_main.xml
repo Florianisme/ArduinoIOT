@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="RelativeOverlap,ContentDescription"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="RelativeOverlap,ContentDescription">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/main_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -27,89 +27,22 @@
                 android:textColor="@color/textColorAccent"
                 android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="16dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/label_plant_water_level"
-                    android:textColor="@android:color/primary_text_light"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/plant_water_level"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:textColor="@android:color/primary_text_light"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/plant_water_level_warning"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Messwert ist zu niedrig!"
-                    android:textColor="@color/value_warning"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#1f000000" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp">
-
-                <TextView
-                    android:id="@+id/settings_text_transparency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="14dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/label_plants_brightness"
-                    android:textColor="@android:color/primary_text_light"
-                    android:textSize="16sp"/>
+            <include
+                android:id="@+id/plant1"
+                layout="@layout/plant" />
 
 
-                <TextView
-                    android:id="@+id/plant_brightness"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
-                    android:layout_centerVertical="true"
-                    android:textColor="@android:color/primary_text_light"
-                    android:textSize="16sp" />
+            <include
+                android:id="@+id/plant2"
+                layout="@layout/plant" />
 
-                <TextView
-                    android:id="@+id/plant_brightness_warning"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Messwert ist zu niedrig!"
-                    android:textColor="@color/value_warning"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
+            <include
+                android:id="@+id/plant3"
+                layout="@layout/plant" />
+
+            <include
+                android:id="@+id/plant4"
+                layout="@layout/plant" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -118,7 +51,7 @@
                 android:layout_marginTop="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center_vertical"
-                android:text="@string/title_room"
+                android:text="@string/title_conditions"
                 android:textColor="@color/textColorAccent"
                 android:textSize="14sp" />
 
@@ -141,8 +74,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
                     android:textColor="@android:color/primary_text_light"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -171,24 +104,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
                     android:textColor="@android:color/primary_text_light"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/room_humidity_warning"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Reduzieren um Schimmelbildung zu vermeiden"
-                    android:textColor="@color/value_warning"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
             </RelativeLayout>
         </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -3,11 +3,8 @@
 
     <string name="app_title">Arduino IOT Demo</string>
 
-    <string name="title_plants">Pflanzen</string>
-    <string name="label_plant_water_level">Wasserstand</string>
-    <string name="label_plants_brightness">Helligkeit</string>
-    <string name="label_plants_brightness_description">Pflanzen sollten an einem ausreichen beleuchtetem Ort platziert werden</string>
-    <string name="title_room">Raumbedingungen</string>
+    <string name="title_plants">Wasserstände</string>
+    <string name="title_conditions">Umgebungsbedingungen</string>
     <string name="label_temperature">Temperatur</string>
     <string name="label_humidity">Luftfeuchtigkeit</string>
     <string name="error_no_value">No value</string>

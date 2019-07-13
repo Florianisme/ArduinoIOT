@@ -49,7 +49,7 @@ void setup() {
   }
 
   Serial.println("Entering deep sleep");
-  ESP.deepSleep(1.8e9); // deep-sleep for 30 minutes, then restart the setup method
+  ESP.deepSleep(7.2e9); // deep-sleep for 120 minutes, then restart the setup method
 }
 
 /*

@@ -1,15 +1,18 @@
 package com.florianisme.arduinoiot;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -24,21 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
 
-    @BindView(R.id.plant_brightness)
-    TextView plantBrightness;
-    @BindView(R.id.plant_water_level)
-    TextView plantWaterLevel;
     @BindView(R.id.room_temperature)
     TextView roomTemperature;
     @BindView(R.id.room_humidity)
     TextView roomHumidity;
-
-    @BindView(R.id.plant_water_level_warning)
-    TextView plantWaterLevelWarning;
-    @BindView(R.id.plant_brightness_warning)
-    TextView plantBrightnessWarning;
-    @BindView(R.id.room_humidity_warning)
-    TextView roomHumidityWarning;
 
     @BindView(R.id.main_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -62,22 +54,82 @@ public class MainActivity extends AppCompatActivity {
         reloadData();
 
         // this adds a swipe-to-refresh listener to our layout so we can swipe down to refresh our data from the database manually
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                reloadData();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::reloadData);
     }
 
     /*
         used to reload data from the database, calls the downloading method for each TextView in our layout
      */
     private void reloadData() {
-        setDataFromDatabase("plant_brightness", plantBrightness);
-        setDataFromDatabase("plant_water_level", plantWaterLevel);
+        setWaterLevels();
         setDataFromDatabase("room_temperature", roomTemperature);
         setDataFromDatabase("room_humidity", roomHumidity);
+    }
+
+    private void setWaterLevels() {
+        Plant[] plants = createPlantObjects();
+        for (Plant plant : plants) {
+            DatabaseReference plantReference = firebaseDatabase.getReference().child(plant.getFirebaseId());
+            plantReference.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                View plantLayout = findViewById(plant.getLayoutId());
+                TextView plantName = plantLayout.findViewById(R.id.plant_name);
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Log.d(TAG, "Task succeeded for field name " + plant.getFirebaseId());
+                        plantName.setText(String.valueOf(dataSnapshot.getValue()));
+                    } else {
+                        plantName.setText("Error");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d(TAG, "Task failed for field name " + plant.getFirebaseId() + " with error message: " + databaseError.getMessage());
+                    plantName.setText("Error");
+                }
+            });
+
+            plantReference.child("water_level").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                View plantLayout = findViewById(plant.getLayoutId());
+                TextView plantWaterLevel = plantLayout.findViewById(R.id.plant_water_level);
+                TextView plantWaterLevelWarning = plantLayout.findViewById(R.id.plant_water_level_warning);
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Log.d(TAG, "Task succeeded for field name " + plant.getFirebaseId());
+
+                        plantWaterLevel.setText(String.valueOf(dataSnapshot.getValue()) + "%");
+                        plantWaterLevelWarning.setVisibility(getWarningLevelVisibility(Double.valueOf(String.valueOf(dataSnapshot.getValue()))));
+                    } else {
+                        plantWaterLevel.setText(String.valueOf(Double.NaN));
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d(TAG, "Task failed for field name " + plant.getFirebaseId() + " with error message: " + databaseError.getMessage());
+                    plantWaterLevel.setText(String.valueOf(Double.NaN));
+                }
+            });
+        }
+    }
+
+    private int getWarningLevelVisibility(Double waterLevel) {
+        return waterLevel > 30D && !Double.isNaN(waterLevel) ? View.INVISIBLE : View.VISIBLE;
+    }
+
+    private Plant[] createPlantObjects() {
+        return new Plant[]{
+                new Plant(R.id.plant1, "plant_1"),
+                new Plant(R.id.plant2, "plant_2"),
+                new Plant(R.id.plant3, "plant_3"),
+                new Plant(R.id.plant4, "plant_4")
+        };
     }
 
     /*
@@ -111,26 +163,11 @@ public class MainActivity extends AppCompatActivity {
 
     String interpretMeasurementData(String childName, double value) {
         switch (childName) {
-            case "plant_brightness":
-                checkWarningLevelBelow(plantBrightnessWarning, value, 15);
-                return (Math.round(value) + "%");
-            case "plant_water_level":
-                checkWarningLevelBelow(plantWaterLevelWarning, value, 25);
-                return (Math.round(value) + "%");
             case "room_temperature":
                 return (value + " °C");
             case "room_humidity":
-                checkWarningLevelAbove(roomHumidityWarning, value, 80);
                 return (Math.round(value) + "%");
         }
         return "Error";
-    }
-
-    void checkWarningLevelBelow(TextView warningTextView, double value, float warningLevel) {
-        warningTextView.setVisibility(value <= warningLevel ? View.VISIBLE : View.GONE);
-    }
-
-    void checkWarningLevelAbove(TextView warningTextView, double value, float warningLevel) {
-        warningTextView.setVisibility(value >= warningLevel ? View.VISIBLE : View.GONE);
     }
 }
