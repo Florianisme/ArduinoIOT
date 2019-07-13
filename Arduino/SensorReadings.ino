@@ -16,13 +16,6 @@ void readTemperatureSensor() {
   DHT11.read(DHT11_INPUT);
 }
 
-float readPlantBrightnessLevel() {
-  const short photocellReading = readAnalogValueFromMuxPin(BRIGHTNESS_INPUT);
-  const float percentage = calculatePercentage(photocellReading);
-  debugReadings("Plant Brightness", percentage);
-  return percentage;
-}
-
 float readRoomTemperature() {
   debugReadings("Room Temperature (°C)", DHT11.temperature);
   return DHT11.temperature;
@@ -36,10 +29,9 @@ float readRoomHumidity() {
 float readPlantWaterLevel() {
   pinMode(WATER_OUTPUT, OUTPUT); // our program only consists of a setup method so we can call it here without issues
   digitalWrite(WATER_OUTPUT, HIGH); // send current through the soil
-  const short analogReading = readAnalogValueFromMuxPin(WATER_INPUT);
+  const short analogReading = analogRead(ANALOG_INPUT);
   digitalWrite(WATER_OUTPUT, LOW); // prevent corosion
   const float percentage = calculatePercentage(analogReading);
   debugReadings("Water Level (%)", percentage);
   return percentage;
 }
-

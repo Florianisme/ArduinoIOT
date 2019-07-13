@@ -21,18 +21,11 @@
 #include <dht11.h> // Temperature Sensor library
 
 // Board GPIO PINS
-#define MUX_A D2
-#define MUX_B D3
-#define MUX_C D4
-#define WATER_OUTPUT D5 // used to read the plant's water level and turned off to prevent corosion
+#define WATER_OUTPUT D2 // used to read the plant's water level and turned off to prevent corosion
 #define ANALOG_INPUT A0 // our only analog input which is connected to the multiplexer's output
 #define DHT11_INPUT D1 // serial connection to our temperature sensor
-// Multiplexer analog inputs
-#define WATER_INPUT 1 // multiplexer input index for the water level
-#define BRIGHTNESS_INPUT 0 // multiplexer input index for the brightness level
 
 #include "Secrets.h" // sensitive keys/passwords have been extracted to another file so they are not directly visible
-// "Multiplexer.ino" contains code for accessing the multiplexer's input pins and passing through their values
 // "SensorReadings.ino" contains all the methods for reading each sensor's value and interpreting them for upload
 // "Util.ino" contains all the helper methods and our pin values (debugging, etc.)
 
@@ -40,7 +33,6 @@ void setup() {
   Serial.begin(115200); // A serial monitor can always be attached to track raw sensor readings
   while(!Serial); // Wait for the serial to initialize
   
-  instantiateMux(); // sets up the Mux's I/O connections so we can read from it
   instantiateWifiConnection(); // connects to WiFi network specified in the config.h
 
   if (WiFi.status() == WL_CONNECTED) {
@@ -49,7 +41,7 @@ void setup() {
   }
 
   Serial.println("Entering deep sleep");
-  ESP.deepSleep(7.2e9); // deep-sleep for 120 minutes, then restart the setup method
+  ESP.deepSleep(3.6e9); // deep-sleep for 60 minutes, then restart the setup method
 }
 
 /*
@@ -57,12 +49,10 @@ void setup() {
  */
 void updateData() {
   readTemperatureSensor(); // Has to be called seperately, the library reads the temperature/humidity once and stores it internally so we can later use it, without calling the read function again
-  const float plantBrightness = readPlantBrightnessLevel(); 
   const float plantWaterLevel = readPlantWaterLevel();
   const float roomTemperature = readRoomTemperature();
   const float roomHumidity = readRoomHumidity();
   
-  Firebase.setFloat("plant_brightness", plantBrightness); // brightness value is stored in the database with the key "plant_brightness"
   Firebase.setFloat("plant_water_level", plantWaterLevel);
   Firebase.setFloat("room_temperature", roomTemperature);
   Firebase.setFloat("room_humidity", roomHumidity);
@@ -71,5 +61,3 @@ void updateData() {
 void loop() {
   // No code here as the ESP runs the code specified in the setup method when exiting deep-sleep mode
 }
-
-
