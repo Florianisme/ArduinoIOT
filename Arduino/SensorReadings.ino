@@ -1,17 +1,17 @@
 /*
- * This class contains all the methods for reading various sensors and interpreting their data
- *
- * Created 29 October 2017
- * By Florian Moehle
- */
+   This class contains all the methods for reading various sensors and interpreting their data
+
+   Created 29 October 2017
+   By Florian Moehle
+*/
 
 dht11 DHT11;
 
 /*
- * reads the temperature/humidity and stores it
- * if we read the values from the sensor, each time we actually want to retrieve them, measuring errors would occur 
- * (eg. humidity of 160% because the sensor has no time to settle)
- */
+   reads the temperature/humidity and stores it
+   if we read the values from the sensor, each time we actually want to retrieve them, measuring errors would occur
+   (eg. humidity of 160% because the sensor has no time to settle)
+*/
 void readTemperatureSensor() {
   DHT11.read(DHT11_INPUT);
 }
@@ -26,12 +26,15 @@ float readRoomHumidity() {
   return DHT11.humidity;
 }
 
-float readPlantWaterLevel() {
+void setWaterLevels() {
   pinMode(WATER_OUTPUT, OUTPUT); // our program only consists of a setup method so we can call it here without issues
-  digitalWrite(WATER_OUTPUT, HIGH); // send current through the soil
-  const short analogReading = analogRead(ANALOG_INPUT);
-  digitalWrite(WATER_OUTPUT, LOW); // prevent corosion
-  const float percentage = calculatePercentage(analogReading);
-  debugReadings("Water Level (%)", percentage);
-  return percentage;
+  digitalWrite(WATER_OUTPUT, HIGH);
+  for (int i = 0; i < 4; i++) {
+    float analogReading = readAnalogValueFromMuxPin(PLANT_INPUTS[i]);
+    float percentage = calculatePercentage(analogReading);
+    debugReadings("Water Level (%)", percentage);
+    Firebase.setFloat(PLANT_FIREBASE_PATHS[i] + "/water_level", percentage);
+    debugReadings("Water Level (%)", percentage);
+  }
+  digitalWrite(WATER_OUTPUT, LOW);
 }

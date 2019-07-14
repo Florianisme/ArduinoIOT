@@ -18,7 +18,7 @@ void debugReadings(String sensorName, float sensorValue) {
  * returns the percentage of the value provided in comparison to the maximum analog input value 1023
  */
 float calculatePercentage(float value) {
-  return (value / 1023.0) * 100;
+  return map(value, 0, 1023,0, 100);
 }
 
 /*    
@@ -30,7 +30,7 @@ void instantiateWifiConnection() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("connecting to SSID " + String(WIFI_SSID));
   while (WiFi.status() != WL_CONNECTED) {
-    if (retryCount >= 10) {
+    if (retryCount >= 20) {
       showConnectionErrorMessage();
       break;
     }
@@ -47,4 +47,3 @@ void instantiateWifiConnection() {
 void showConnectionErrorMessage() {
   Serial.println("An Error occured while connection to SSID " + String(WIFI_SSID));
 }
-
