@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -70,53 +72,30 @@ public class MainActivity extends AppCompatActivity {
         Plant[] plants = createPlantObjects();
         for (Plant plant : plants) {
             DatabaseReference plantReference = firebaseDatabase.getReference().child(plant.getFirebaseId());
-            plantReference.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
-
-                View plantLayout = findViewById(plant.getLayoutId());
-                TextView plantName = plantLayout.findViewById(R.id.plant_name);
-
+            plantReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        Log.d(TAG, "Task succeeded for field name " + plant.getFirebaseId());
-                        plantName.setText(String.valueOf(dataSnapshot.getValue()));
-                    } else {
-                        plantName.setText("Error");
-                    }
+                    setPlantViewData((Map<String, Object>)dataSnapshot.getValue(), plant);
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.d(TAG, "Task failed for field name " + plant.getFirebaseId() + " with error message: " + databaseError.getMessage());
-                    plantName.setText("Error");
-                }
-            });
 
-            plantReference.child("water_level").addListenerForSingleValueEvent(new ValueEventListener() {
-
-                View plantLayout = findViewById(plant.getLayoutId());
-                TextView plantWaterLevel = plantLayout.findViewById(R.id.plant_water_level);
-                TextView plantWaterLevelWarning = plantLayout.findViewById(R.id.plant_water_level_warning);
-
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        Log.d(TAG, "Task succeeded for field name " + plant.getFirebaseId());
-
-                        plantWaterLevel.setText(String.valueOf(dataSnapshot.getValue()) + "%");
-                        plantWaterLevelWarning.setVisibility(getWarningLevelVisibility(Double.valueOf(String.valueOf(dataSnapshot.getValue()))));
-                    } else {
-                        plantWaterLevel.setText(String.valueOf(Double.NaN));
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.d(TAG, "Task failed for field name " + plant.getFirebaseId() + " with error message: " + databaseError.getMessage());
-                    plantWaterLevel.setText(String.valueOf(Double.NaN));
                 }
             });
         }
+    }
+
+    private void setPlantViewData(Map<String, Object> childs, Plant plant) {
+        View plantLayout = findViewById(plant.getLayoutId());
+        TextView plantName = plantLayout.findViewById(R.id.plant_name);
+        TextView plantWaterLevel = plantLayout.findViewById(R.id.plant_water_level);
+        TextView plantWaterLevelWarning = plantLayout.findViewById(R.id.plant_water_level_warning);
+
+        plantName.setText(String.valueOf(childs.get("name")));
+        Object waterLevel = childs.get("water_level");
+        plantWaterLevel.setText(waterLevel + "%");
+        plantWaterLevelWarning.setVisibility(getWarningLevelVisibility(Double.valueOf(String.valueOf(waterLevel))));
     }
 
     private int getWarningLevelVisibility(Double waterLevel) {
