@@ -60,6 +60,3 @@ int readAnalogValueFromMuxPin(int pin) {
   
   return analogRead(ANALOG_INPUT); // Value of the sensor connected to the specified pin
 }
-
-
-

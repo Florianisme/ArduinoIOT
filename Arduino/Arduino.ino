@@ -21,9 +21,9 @@
 #include <dht11.h> // Temperature Sensor library
 
 // Board GPIO PINS
-#define MUX_A D2
+#define MUX_A D4
 #define MUX_B D3
-#define MUX_C D4
+#define MUX_C D2
 #define WATER_OUTPUT D5 // used to read the plant's water level and turned off to prevent corosion
 #define ANALOG_INPUT A0 // our only analog input which is connected to the multiplexer's output
 #define DHT11_INPUT D1 // serial connection to our temperature sensor
