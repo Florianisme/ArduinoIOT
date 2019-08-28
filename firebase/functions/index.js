@@ -11,7 +11,7 @@ admin.initializeApp(functions.config().firebase);
 app.intent('water_level', (conv) => {
 	return new Promise( function( resolve, reject ){
 	admin.database().ref('timestamp').once('value', (snapshot) => {
-		var responseSentence = 'Die Wasserstände betrugen vor ' + getMinutesFromTimestamp(snapshot.val() + ' Minuten:);
+		var responseSentence = 'Die Wasserstände betrugen vor ' + getMinutesFromTimestamp(snapshot.val() + ' Minuten: ');
 		var plantsIndex = 0;
 			for(var i = 1; i < 5; i++) {
 				admin.database().ref('plant_' + i).once('value', (snapshot) => {
