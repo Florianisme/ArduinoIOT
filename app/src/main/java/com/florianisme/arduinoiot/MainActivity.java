@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +17,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     TextView roomTemperature;
     @BindView(R.id.room_humidity)
     TextView roomHumidity;
+    @BindView(R.id.refreshed_timestamp)
+    TextView timestampTextView;
 
     @BindView(R.id.main_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -66,6 +74,31 @@ public class MainActivity extends AppCompatActivity {
         setWaterLevels();
         setDataFromDatabase("room_temperature", roomTemperature);
         setDataFromDatabase("room_humidity", roomHumidity);
+        setTimestamp();
+    }
+
+    private void setTimestamp() {
+        firebaseDatabase.getReference().child("timestamp").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("ECT"));
+                    Date timestamp = simpleDateFormat.parse((String) dataSnapshot.getValue());
+                    Date now = new Date(System.currentTimeMillis());
+
+                    long minuteDifference = TimeUnit.MINUTES.convert(now.getTime() - timestamp.getTime(), TimeUnit.MILLISECONDS);
+                    timestampTextView.setText("Aktualisiert vor " + minuteDifference + " Minuten");
+                } catch (ParseException e) {
+                    timestampTextView.setText("Error 1");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                timestampTextView.setText("Error");
+            }
+        });
     }
 
     private void setWaterLevels() {
@@ -80,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
