@@ -1,38 +1,47 @@
 'use strict';
-
-process.env.DEBUG = 'actions-on-google:*';
-const App = require('actions-on-google').DialogflowApp;
+const {dialogflow} = require('actions-on-google');
 const functions = require('firebase-functions');
+const app = dialogflow({debug: true});
 const admin = require('firebase-admin');
+const {
+  SimpleResponse
+} = require('actions-on-google');
 admin.initializeApp(functions.config().firebase);
-
-const ACTION_WATER_LEVEL = "water_level";
-const ACTION_NEEDS_WATERING = "plant_needs_watering";
-
-exports.getWaterLevel = functions.https.onRequest((request, response) => {
-	const app = new App({request, response});
-	
-	function getLevel (app) {
-		admin.database().ref('plant_water_level').once('value', (snapshot) => {
-			let level = snapshot.val();
-			app.tell('Der Wasserstand beträgt ' + level + '%.'); 
-		});
-	}
-	
-	function needsWatering(app) {
-		admin.database().ref('plant_water_level').once('value', (snapshot) => {
-			let level = snapshot.val();
-			if (level < 30) {
-				app.tell('Die Pflanze sollte gegossen werden, der Wasserstand beträgt noch ' + level + '%');
-			}
-			else {
-				app.tell('Die Pflanze muss noch nicht gegossen werden, der Wasserstand beträgt noch ' + level + '%');
+ 
+app.intent('water_level', (conv) => {
+	return new Promise( function( resolve, reject ){
+	admin.database().ref('timestamp').once('value', (snapshot) => {
+		var responseSentence = 'Die Wasserstände betrugen vor ' + getMinutesFromTimestamp(snapshot.val() + ' Minuten:);
+		var plantsIndex = 0;
+			for(var i = 1; i < 5; i++) {
+				admin.database().ref('plant_' + i).once('value', (snapshot) => {
+					let level = snapshot.val().water_level;
+					let name = snapshot.val().name;
+					responseSentence += 'Bei ' + name + ', ' + level + '%. ';
+					plantsIndex++;
+					if(checkAllDBRequestsFinished(plantsIndex)) {
+						conv.ask(responseSentence.toString());
+						conv.close('Vielen Dank');
+						resolve();
+					}
+				});
 			}
 		});
-	}
-	
-	let actionMap = new Map();
-	actionMap.set(ACTION_WATER_LEVEL, getLevel);
-	actionMap.set(ACTION_NEEDS_WATERING, needsWatering);
-	app.handleRequest(actionMap);
- });
+	});
+});
+
+function checkAllDBRequestsFinished(counter) {
+	return counter === 4;
+}
+
+function getMinutesFromTimestamp(timestamp) {
+	var date = new Date(timestamp);
+	var now = new Date();
+	var difference = now - date;
+	return Math.floor(difference / 60000);
+}
+
+exports.timestamp = functions.database.ref('/room_humidity').onUpdate(
+    (change, context) => admin.database().ref('/timestamp').set(context.timestamp));
+
+exports.getWaterLevel = functions.https.onRequest(app);
